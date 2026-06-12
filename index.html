@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SmartMath - Interactive Graph Learning Platform">
+    <title>SmartMath - Interactive Graph Learning</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <!-- LANGUAGE SELECTOR PAGE -->
+    <div id="languageSelector" class="page active">
+        <div class="container card fade-in">
+            <div class="logo-container">
+                <div class="logo">📊</div>
+            </div>
+            <h1>SmartMath</h1>
+            <p class="subtitle">Pilih Bahasa / Choose Language</p>
+            
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="setLanguage('ms')">
+                    🇲🇾 Bahasa Melayu
+                </button>
+                <button class="btn btn-primary" onclick="setLanguage('en')">
+                    🇬🇧 English
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOGIN PAGE -->
+    <div id="login" class="page">
+        <div class="container card fade-in">
+            <div class="logo-container">
+                <div class="logo">📊</div>
+            </div>
+            <h1>SmartMath</h1>
+            <p class="subtitle" id="loginSubtitle">Belajar Graf Dengan Interaktif</p>
+            
+            <form onsubmit="startGame(event)">
+                <input 
+                    type="text" 
+                    id="studentName" 
+                    placeholder="Masukkan Nama Pelajar" 
+                    maxlength="20"
+                    required
+                    autocomplete="off"
+                >
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary" id="loginBtn">Log Masuk</button>
+                    <button type="button" class="btn btn-secondary" onclick="setLanguage(null)" id="changeLanguageBtn">
+                        Tukar Bahasa
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN MENU -->
+    <div id="menu" class="page">
+        <div class="container card fade-in">
+            <div class="header-with-score">
+                <h2 id="menuTitle">Pilih Topik</h2>
+                <div class="score-badge">
+                    <span class="score-label">Score:</span>
+                    <span id="score" class="score-value">0</span>
+                </div>
+            </div>
+
+            <div class="difficulty-selector">
+                <h3 id="difficultyLabel">Pilih Kesulitan:</h3>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn active" data-difficulty="easy" id="easyBtn">
+                        🟢 <span id="diffEasy">Mudah</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="medium" id="mediumBtn">
+                        🟡 <span id="diffMedium">Sederhana</span>
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="hard" id="hardBtn">
+                        🔴 <span id="diffHard">Sukar</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="topics-grid">
+                <button class="topic-btn" data-topic="linear" onclick="startTopic('linear')">
+                    <span class="topic-icon">📈</span>
+                    <span id="topicLinear">Graf Linear</span>
+                </button>
+                <button class="topic-btn" data-topic="quadratic" onclick="startTopic('quadratic')">
+                    <span class="topic-icon">∩</span>
+                    <span id="topicQuadratic">Graf Kuadratik</span>
+                </button>
+                <button class="topic-btn" data-topic="exponential" onclick="startTopic('exponential')">
+                    <span class="topic-icon">📊</span>
+                    <span id="topicExponential">Graf Eksponen</span>
+                </button>
+                <button class="topic-btn" data-topic="trigonometric" onclick="startTopic('trigonometric')">
+                    <span class="topic-icon">〰️</span>
+                    <span id="topicTrigonometric">Graf Trigonometrik</span>
+                </button>
+            </div>
+
+            <div class="button-group full-width">
+                <button class="btn btn-game" onclick="showPage('guessTheGraph')">
+                    <span>🎮</span>
+                    <span id="guessGraphLabel">Teka Graf</span>
+                </button>
+                <button class="btn btn-ai" onclick="showPage('aiTutor')">
+                    <span>🤖</span>
+                    <span id="aiTutorLabel">AI Tutor</span>
+                </button>
+            </div>
+
+            <button class="btn btn-unlock" id="level2Btn" style="display:none; width: 100%;" onclick="showPage('level2')">
+                ⭐ Level 2 🔓
+            </button>
+
+            <hr class="divider">
+
+            <div class="button-group full-width">
+                <button class="btn btn-secondary" onclick="showPage('stats')">
+                    📊 <span id="statsLabel">Statistik</span>
+                </button>
+                <button class="btn btn-secondary" onclick="logout()">
+                    🚪 <span id="logoutBtn">Keluar</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUESTION PAGES -->
+    <div id="questionContainer" class="page">
+        <div class="container card fade-in">
+            <div class="question-header">
+                <button class="btn-back" onclick="goBack()">← <span id="backLabel">Kembali</span></button>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <span id="questionCounter" class="question-counter">1/5</span>
+            </div>
+
+            <div id="questionContent" class="question-content">
+                <!-- Question will be inserted here by JavaScript -->
+            </div>
+
+            <div class="answer-section">
+                <form onsubmit="submitAnswer(event)">
+                    <input 
+                        type="text" 
+                        id="answerInput" 
+                        placeholder="Masukkan Jawapan" 
+                        autocomplete="off"
+                        required
+                    >
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary flex-1" id="submitBtn">
+                            Hantar Jawapan
+                        </button>
+                        <button type="button" class="btn btn-secondary flex-1" onclick="showHint()" id="hintBtn">
+                            💡 Hint
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="feedbackMessage" class="feedback-message"></div>
+        </div>
+    </div>
+
+    <!-- HINT PAGE -->
+    <div id="hintPage" class="page">
+        <div class="container card fade-in">
+            <h2 id="hintTitle">💡 Hint</h2>
+            <div id="hintContent" class="hint-content"></div>
+            <button class="btn btn-primary" onclick="backToQuestion()" style="width: 100%;" id="backFromHintBtn">
+                Kembali ke Soalan
+            </button>
+        </div>
+    </div>
+
+    <!-- AI TUTOR PAGE -->
+    <div id="aiTutor" class="page">
+        <div class="container card fade-in">
+            <div class="question-header">
+                <button class="btn-back" onclick="showPage('menu')">← <span id="backLabel">Kembali</span></button>
+            </div>
+            
+            <h2 id="aiTutorTitle">🤖 AI Tutor</h2>
+            <p class="subtitle" id="aiTutorSubtitle">Tanya apa saja tentang Matematik!</p>
+
+            <div class="suggested-questions">
+                <h3 id="suggestedLabel">💡 Soalan Dicadangkan:</h3>
+                <div id="suggestedQuestionsContainer" class="suggestions-grid"></div>
+            </div>
+
+            <div class="chat-container">
+                <div id="chatMessages" class="chat-messages"></div>
+            </div>
+
+            <div class="chat-input-section">
+                <form onsubmit="sendQuestion(event)">
+                    <input 
+                        type="text" 
+                        id="userQuestion" 
+                        placeholder="Tanya soalan anda..." 
+                        autocomplete="off"
+                        required
+                    >
+                    <button type="submit" class="btn btn-primary" id="sendBtn">Hantar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- GUESS THE GRAPH GAME -->
+    <div id="guessTheGraph" class="page">
+        <div class="container card fade-in">
+            <div class="question-header">
+                <button class="btn-back" onclick="showPage('menu')">← <span id="backLabel">Kembali</span></button>
+                <div class="progress-bar">
+                    <div id="gameProgressFill" class="progress-fill"></div>
+                </div>
+                <span id="gameCounter" class="question-counter">1/5</span>
+            </div>
+
+            <h2 id="guessGraphTitle">🎮 Teka Bentuk Graf</h2>
+            
+            <div id="graphGameContent" class="graph-game-content">
+                <canvas id="gameChart" class="game-chart"></canvas>
+            </div>
+
+            <div class="graph-options" id="graphOptions">
+                <!-- Graph type options will be inserted here -->
+            </div>
+
+            <div id="gameMessage" class="feedback-message"></div>
+        </div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div id="level2" class="page">
+        <div class="container card fade-in">
+            <h1 id="level2Title">⭐ Level 2 🔓</h1>
+            <p id="level2Text1">Tahniah! Anda berjaya unlock level baru.</p>
+            <p id="level2Text2">Lanjutkan ke topik yang lebih mencabar!</p>
+            <button class="btn btn-primary" onclick="showPage('menu')" style="width: 100%;" id="level2BackBtn">
+                Kembali ke Menu
+            </button>
+        </div>
+    </div>
+
+    <!-- SUCCESS PAGE -->
+    <div id="success" class="page">
+        <div class="container card fade-in">
+            <div class="success-content">
+                <div class="trophy">🏆</div>
+                <h1 id="successTitle">Tahniah!</h1>
+                <p id="successText">Anda berjaya menyelesaikan topik ini.</p>
+                <div class="final-score" id="scoreLabel">
+                    Markah: <span id="finalScore">0</span>/100
+                </div>
+                <div class="performance-text" id="performanceText"></div>
+                <button class="btn btn-primary" onclick="showPage('menu')" style="width: 100%;" id="successBackBtn">
+                    ← Kembali ke Menu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STATS PAGE -->
+    <div id="stats" class="page">
+        <div class="container card fade-in">
+            <div class="question-header">
+                <button class="btn-back" onclick="showPage('menu')">← <span id="backLabel">Kembali</span></button>
+            </div>
+            <h2 id="statsTitle">📊 Statistik Anda</h2>
+            <div id="statsContent" class="stats-content">
+                <!-- Stats will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
